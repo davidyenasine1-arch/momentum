@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Momentum | Focus App</title>
+    <meta name="description" content="Momentum is a productivity app that helps people focus, plan, and move forward." />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #000000;
+        --bg-2: #0f172a;
+        --panel: rgba(17, 17, 17, 0.85);
+        --panel-2: rgba(30, 41, 59, 0.78);
+        --card: #121212;
+        --primary: #8b5cf6;
+        --primary-2: #22c55e;
+        --accent: #38bdf8;
+        --text: #f5f7fb;
+        --muted: #b5bfd1;
+        --line: rgba(255,255,255,0.09);
+        --shadow: rgba(15, 23, 42, 0.55);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: 'Inter', Arial, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(139, 92, 246, 0.22), transparent 26%),
+          radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.16), transparent 24%),
+          #000;
+        color: var(--text);
+      }
+      a { color: inherit; text-decoration: none; }
+      button, input { font: inherit; }
+
+      .landing {
+        display: block;
+      }
+      .demo-mode .landing {
+        display: none;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(12px);
+        background: rgba(3, 4, 10, 0.75);
+        border-bottom: 1px solid var(--line);
+      }
+      .container {
+        width: min(1160px, calc(100% - 30px));
+        margin: 0 auto;
+      }
+      .nav {
+        min-height: 74px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+      }
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        box-shadow: 0 12px 28px rgba(139, 92, 246, 0.35);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        color: var(--muted);
+        font-size: 0.96rem;
+      }
+      .nav-links a:hover { color: var(--text); }
+      .demo-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+      .demo-btn:hover { transform: translateY(-1px); }
+
+      .hero {
+        padding: 80px 0 50px;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 36px;
+        align-items: center;
+      }
+      .eyebrow {
+        display: inline-flex;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(56,189,248,0.12);
+        color: var(--accent);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 18px 0 18px;
+        font-size: clamp(2.9rem, 6vw, 5rem);
+        line-height: 0.98;
+        letter-spacing: -0.06em;
+      }
+      .lead {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 620px;
+        font-size: 1.08rem;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 0.2s ease;
+      }
+      .btn:hover { transform: translateY(-2px); }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        box-shadow: 0 16px 26px rgba(124, 58, 237, 0.35);
+      }
+      .btn-secondary {
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        border-color: var(--line);
+      }
+      .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 26px;
+        margin-top: 36px;
+      }
+      .stat strong {
+        display: block;
+        font-size: 1.9rem;
+      }
+      .stat span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .device {
+        background: linear-gradient(180deg, rgba(17, 17, 17, 0.94), rgba(17, 17, 17, 0.74));
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 18px;
+        box-shadow: 0 28px 60px rgba(0,0,0,0.52);
+      }
+      .screen {
+        background: linear-gradient(180deg, rgba(139,92,246,0.12), rgba(56,189,248,0.08));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 22px;
+        padding: 18px;
+      }
+      .screen-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      .dots { display: flex; gap: 8px; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; }
+      .dot.red { background: #ef4444; }
+      .dot.yellow { background: #facc15; }
+      .dot.green { background: #22c55e; }
+      .app-card {
+        background: rgba(15, 15, 15, 0.78);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 18px;
+      }
+      .mini-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .app-name {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+      }
+      .app-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #8b5cf6, #38bdf8);
+        font-weight: 900;
+      }
+      .panel-label {
+        margin: 0 0 8px;
+        color: var(--muted);
+      }
+      .panel-title {
+        margin: 0 0 12px;
+        font-size: clamp(1.5rem, 3vw, 2.2rem);
+      }
+      .progress {
+        margin-top: 12px;
+      }
+      .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        width: 78%;
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--primary-2));
+      }
+      .panel-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .feature-wrap {
+        padding: 20px 0 80px;
+      }
+      .section-head {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .section-head h2 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.05em;
+      }
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .feature {
+        background: rgba(17, 17, 17, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 24px;
+      }
+      .feature-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: rgba(139, 92, 246, 0.12);
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+      }
+      .feature h3 {
+        margin: 0 0 10px;
+        font-size: 1.25rem;
+      }
+      .feature p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .cta-box {
+        margin: 0 0 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 30px 26px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(56,189,248,0.08));
+      }
+      .cta-box h3 {
+        margin: 0 0 8px;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        letter-spacing: -0.04em;
+      }
+      .cta-box p {
+        margin: 0;
+        color: var(--muted);
+      }
+      footer {
+        padding: 28px 0 50px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .demo-shell {
+        display: none;
+      }
+      .demo-mode .demo-shell {
+        display: block;
+      }
+
+      .demo-app {
+        position: relative;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr);
+        grid-template-rows: minmax(0,1fr) 30px;
+        background: rgba(10, 10, 10, 0.8);
+      }
+      .demo-sidebar {
+        border-right: 1px solid var(--line);
+        padding: 18px 14px 14px;
+        background: rgba(10,10,10,0.78);
+      }
+      .demo-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 8px 20px;
+      }
+      .demo-brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        font-weight: 800;
+      }
+      .demo-brand h1 {
+        margin: 0;
+        font-size: 1rem;
+      }
+      .demo-brand p {
+        margin: 2px 0 0;
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+      .demo-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .demo-tab {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .demo-tab.active {
+        background: rgba(255,255,255,0.04);
+        color: var(--text);
+      }
+      .demo-main {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      .demo-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 30px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .demo-header h2 {
+        margin: 0;
+        font-size: 2rem;
+        letter-spacing: -0.05em;
+      }
+      .demo-time {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .demo-body {
+        flex: 1;
+        padding: 24px 30px;
+        overflow: auto;
+      }
+      .demo-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 18px;
+      }
+      .demo-form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .demo-input {
+        flex: 1;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px 14px;
+        color: var(--text);
+      }
+      .demo-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .demo-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255,255,255,0.02);
+        margin-top: 10px;
+      }
+      .demo-item strong { font-weight: 600; }
+      .demo-footer {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+      .demo-mode .demo-shell {
+        display: block;
+      }
+
+      .app {
+        position: relative;
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) 30px;
+        height: 100vh;
+        background: rgba(10, 10, 10, 0.8);
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--line);
+        padding: 16px 12px 12px;
+        background: rgba(10, 10, 10, 0.9);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 8px 18px;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        left: 0;
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        border-radius: 6px;
+      }
+
+      .back-btn:hover {
+        color: var(--text);
+        background: rgba(255,255,255,0.05);
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        font-weight: 700;
+        margin-left: 32px;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 0.7rem;
+      }
+
+      .tabs {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      .tab-btn {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 10px;
+        border: none;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 0.85rem;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .tab-btn:hover { background: rgba(255,255,255,0.05); }
+      .tab-btn.active { background: rgba(255,255,255,0.08); color: var(--text); }
+
+      .tab-label { display: none; }
+      @media (min-width: 800px) { .tab-label { display: inline; } }
+
+      .sidebar-footer {
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+
+      .shortcuts {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 0 4px;
+      }
+
+      .shortcut-row {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.65rem;
+        color: var(--muted);
+      }
+
+      .shortcut-key {
+        padding: 2px 4px;
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        background: rgba(255,255,255,0.02);
+      }
+
+      .workspace {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .workspace-header {
+        flex-shrink: 0;
+        padding: 20px 28px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .page-heading h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        letter-spacing: -0.04em;
+      }
+
+      .page-desc {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .header-clock {
+        color: var(--muted);
+        font-size: 0.82rem;
+        letter-spacing: 0.08em;
+      }
+
+      .content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 28px 24px;
+      }
+
+      .tab-panel { display: none; }
+      .tab-panel.active { display: block; }
+
+      .task-form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .task-input, .focus-select, .deadline-input, .deadline-date, .promise-input {
+        flex: 1;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--text);
+        padding: 10px 12px;
+      }
+
+      .filters {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .filter-btn {
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+
+      .filter-btn.active { background: rgba(255,255,255,0.06); color: var(--text); }
+
+      .task-list, .deadline-list, .promise-history, .apps-list, .activity-list, .session-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .task-item, .deadline-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+      }
+
+      .app-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .focus-grid {
+        display: grid;
+        grid-template-columns: 1fr 0.7fr;
+        gap: 16px;
+      }
+
+      .focus-main, .focus-side, .promise-main, .promise-side, .activity-side, .activity-main {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .field-label, .section-title {
+        display: block;
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .timer-card {
+        margin-top: 16px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 20px 16px;
+        text-align: center;
+      }
+
+      .timer-display {
+        font-size: 3rem;
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        margin-bottom: 8px;
+      }
+
+      .timer-task-label {
+        color: var(--muted);
+        font-size: 0.88rem;
+        margin-bottom: 14px;
+      }
+
+      .timer-presets {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin: 14px 0;
+      }
+
+      .preset-btn {
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+
+      .preset-btn.active { background: var(--primary); color: white; border-color: transparent; }
+
+      .timer-controls {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary, .btn-secondary, .btn-add, .btn-clear {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.15s ease;
+      }
+
+      .btn-primary, .btn-add {
+        background: var(--primary);
+        color: white;
+        border-color: transparent;
+      }
+
+      .btn-primary:hover, .btn-add:hover { opacity: 0.9; }
+
+      .btn-secondary, .btn-clear {
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+      }
+
+      .btn-secondary:hover, .btn-clear:hover { background: rgba(255,255,255,0.05); }
+
+      .promise-grid {
+        display: grid;
+        grid-template-columns: 1fr 0.7fr;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .promise-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .promise-input {
+        width: 100%;
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .promise-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .promise-status-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      .empty-state {
+        color: var(--muted);
+        font-size: 0.88rem;
+        margin-top: 8px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .stat-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px 10px;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 1.6rem;
+        font-weight: 700;
+      }
+
+      .stat-label {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .weekly-chart {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 10px;
+        align-items: flex-end;
+        min-height: 140px;
+      }
+
+      .chart-bar {
+        background: linear-gradient(180deg, rgba(139,92,246,0.4), rgba(139,92,246,0.1));
+        border-radius: 6px 6px 0 0;
+        min-height: 30px;
+      }
+
+      .activity-grid {
+        display: grid;
+        grid-template-columns: 0.8fr 1fr;
+        gap: 16px;
+      }
+
+      .apps-used-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+      }
+
+      .apps-used-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .apps-used-label { flex: 1; }
+      .apps-used-value { color: var(--text); font-weight: 600; }
+
+      .settings-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .settings-col {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .sound-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+
+      .sound-option {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: var(--text);
+        padding: 6px 10px;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+
+      .sound-option:hover { background: rgba(255,255,255,0.05); }
+
+      .volume-row {
+        margin-top: 12px;
+      }
+
+      .volume-row input[type="range"] {
+        width: 100%;
+        margin-top: 6px;
+      }
+
+      .statusbar {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 16px;
+        border-top: 1px solid var(--line);
+        background: rgba(10, 10, 10, 0.9);
+        color: var(--muted);
+        font-size: 0.72rem;
+      }
+
+      .status-left, .status-right { display: flex; align-items: center; }
+      .status-right { gap: 12px; }
+
+      @media (max-width: 980px) {
+        .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr 30px; }
+        .sidebar { border-right: none; border-bottom: 1px solid var(--line); flex-direction: row; }
+        .tabs { flex-direction: row; overflow-x: auto; }
+        .focus-grid, .activity-grid, .settings-grid, .promise-grid { grid-template-columns: 1fr; }
+        .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="landing">
+      <header class="header">
+        <div class="container nav">
+          <div class="brand">
+            <div class="brand-mark">M</div>
+            <span>Momentum</span>
+          </div>
+
+          <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#download">Download</a>
+            <a href="#support">Support</a>
+          </div>
+
+          <button class="demo-btn" id="demoToggle" type="button">View Demo</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="container hero-grid">
+            <div>
+              <div class="eyebrow">Boost your workflow</div>
+              <h1>Take control with Momentum.</h1>
+              <p class="lead">
+                Momentum helps you stay focused, organize tasks, and build daily habits that actually stick.
+                Download the app and turn busy days into productive wins.
+              </p>
+
+              <div class="cta-row" id="download">
+                <a href="file:///C:/Users/USER/Desktop/New%20folder/MomentumApp/Momentum.exe" class="btn btn-primary" id="downloadBtn">Download for PC</a>
+                <button type="button" class="btn btn-secondary" id="viewDemoBtn">View Demo</button>
+              </div>
+
+              <div class="stats">
+                <div class="stat">
+                  <strong>1.2M+</strong>
+                  <span>Users worldwide</span>
+                </div>
+                <div class="stat">
+                  <strong>12 min</strong>
+                  <span>Saved daily</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="device">
+              <div class="screen">
+                <div class="screen-top">
+                  <div class="dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                  </div>
+                  <span>Momentum App</span>
+                </div>
+
+                <div class="app-card">
+                  <div class="mini-head">
+                    <div class="app-name">
+                      <div class="app-icon">M</div>
+                      <span>Momentum</span>
+                    </div>
+                    <span>Today</span>
+                  </div>
+
+                  <div>
+                    <p class="panel-label">Focus goal</p>
+                    <h3 class="panel-title">Deep Work Sprint</h3>
+                  </div>
+
+                  <div class="progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill"></div>
+                    </div>
+                  </div>
+
+                  <div class="panel-meta">
+                    <span>4 tasks</span>
+                    <span>78% complete</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="feature-wrap" id="features">
+          <div class="container">
+            <div class="section-head">
+              <h2>Why people love Momentum</h2>
+              <p>Everything you need to stay consistent, focused, and moving forward.</p>
+            </div>
+
+            <div class="features">
+              <article class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast focus sessions</h3>
+                <p>Break big work into manageable sprints with clean timers and distraction-free tools.</p>
+              </article>
+
+              <article class="feature">
+                <div class="feature-icon">✅</div>
+                <h3>Smart planning</h3>
+                <p>Organize your day with priority lists, habits, and checklists that keep you on track.</p>
+              </article>
+
+              <article class="feature">
+                <div class="feature-icon">📈</div>
+                <h3>Visible progress</h3>
+                <p>See streaks, completed goals, and momentum charts that keep your motivation high.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="container" id="support">
+          <div class="cta-box">
+            <div>
+              <h3>Ready to download Momentum?</h3>
+              <p>Start your better routine today with a cleaner way to work and focus.</p>
+            </div>
+            <button type="button" class="btn btn-primary" id="downloadBtnBottom">Download Now</button>
+          </div>
+        </section>
+      </main>
+
+      <footer>© 2026 Momentum. Built for focus and progress.</footer>
+    </div>
+
+    <div class="demo-shell">
+      <main class="app">
+        <aside class="sidebar">
+          <div class="brand">
+            <button id="backBtn" class="back-btn" title="Back to landing">← Back</button>
+            <div class="brand-mark">M</div>
+            <div>
+              <h1>Momentum</h1>
+              <p class="subtitle">Focus. Track. Done.</p>
+            </div>
+          </div>
+
+          <nav class="tabs">
+            <button class="tab-btn active" data-tab="tasks" title="Tasks">▤ <span class="tab-label">Tasks</span></button>
+            <button class="tab-btn" data-tab="focus" title="Focus">◷ <span class="tab-label">Focus</span></button>
+            <button class="tab-btn" data-tab="promise" title="Promise">✦ <span class="tab-label">Promise</span></button>
+            <button class="tab-btn" data-tab="deadline" title="Deadline">⚑ <span class="tab-label">Deadline</span></button>
+            <button class="tab-btn" data-tab="stats" title="Stats">▥ <span class="tab-label">Stats</span></button>
+            <button class="tab-btn" data-tab="activity" title="Activity">≈ <span class="tab-label">Activity</span></button>
+            <button class="tab-btn" data-tab="settings" title="Settings">⚙ <span class="tab-label">Settings</span></button>
+          </nav>
+
+          <div class="sidebar-footer">
+            <div class="shortcuts">
+              <div class="shortcut-row"><span class="shortcut-key">Alt</span><span class="shortcut-key">1–7</span> switch</div>
+              <div class="shortcut-row"><span class="shortcut-key">Esc</span> back to landing</div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="workspace">
+          <header class="workspace-header">
+            <div class="header-row">
+              <div class="page-heading">
+                <h2 id="page-title">Tasks</h2>
+                <p class="page-desc" id="page-desc">Add tasks, then run focus sessions on them.</p>
+              </div>
+              <div id="header-clock" class="header-clock">--:--:--</div>
+            </div>
+          </header>
+
+          <div class="content">
+            <section id="tab-tasks" class="tab-panel active">
+              <form id="task-form" class="task-form" autocomplete="off">
+                <input type="text" id="task-input" class="task-input" placeholder="Add a task…" maxlength="120" />
+                <button type="submit" class="btn-add">Add</button>
+              </form>
+              <div class="filters" role="tablist">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Done</button>
+              </div>
+              <ul id="task-list" class="task-list"></ul>
+              <p id="empty-state" class="empty-state">Nothing here yet.</p>
+              <footer class="app-footer">
+                <span id="items-left">0 tasks left</span>
+                <button id="clear-completed" class="btn-clear">Clear done</button>
+              </footer>
+            </section>
+
+            <section id="tab-focus" class="tab-panel">
+              <div class="focus-grid">
+                <div class="focus-main">
+                  <label class="field-label" for="focus-task">Working on</label>
+                  <select id="focus-task" class="focus-select">
+                    <option value="">No active tasks</option>
+                  </select>
+                  <div class="timer-card">
+                    <div id="timer-display" class="timer-display">25:00</div>
+                    <div id="timer-task-label" class="timer-task-label">Select a task to begin</div>
+                    <div class="timer-presets">
+                      <button class="preset-btn" data-mins="15">15</button>
+                      <button class="preset-btn active" data-mins="25">25</button>
+                      <button class="preset-btn" data-mins="45">45</button>
+                      <button class="preset-btn" data-mins="60">60</button>
+                    </div>
+                    <div class="timer-controls">
+                      <button id="timer-start" class="btn-primary">Start</button>
+                      <button id="timer-add" class="btn-secondary">+5</button>
+                      <button id="timer-reset" class="btn-secondary">Reset</button>
+                    </div>
+                  </div>
+                </div>
+                <aside class="focus-side">
+                  <h3 class="section-title">Today</h3>
+                  <ul id="session-list" class="session-list"></ul>
+                  <p id="sessions-empty" class="empty-state">No sessions yet.</p>
+                </aside>
+              </div>
+            </section>
+
+            <section id="tab-promise" class="tab-panel">
+              <div class="promise-grid">
+                <div class="promise-main">
+                  <h3 class="section-title">Today's promise</h3>
+                  <div class="promise-card">
+                    <textarea id="promise-input" class="promise-input" rows="4" maxlength="200" placeholder="I promise to…"></textarea>
+                    <div class="promise-actions">
+                      <button id="promise-save" class="btn-primary">Save promise</button>
+                      <button id="promise-clear" class="btn-secondary">Clear</button>
+                    </div>
+                  </div>
+                </div>
+                <aside class="promise-side">
+                  <h3 class="section-title">Status</h3>
+                  <div class="promise-status-card">
+                    <span id="promise-status" class="promise-status">No promise yet</span>
+                  </div>
+                  <h3 class="section-title">Past promises</h3>
+                  <ul id="promise-history" class="promise-history"></ul>
+                  <p id="promise-history-empty" class="empty-state">No past promises yet.</p>
+                </aside>
+              </div>
+            </section>
+
+            <section id="tab-deadline" class="tab-panel">
+              <form id="deadline-form" class="deadline-form" autocomplete="off">
+                <input type="text" id="deadline-work" class="deadline-input" placeholder="What work is due?" maxlength="120" />
+                <input type="date" id="deadline-date" class="deadline-date" aria-label="Day of deadline" />
+                <button type="submit" class="btn-add">Add</button>
+              </form>
+              <ul id="deadline-list" class="deadline-list"></ul>
+              <p id="deadline-empty" class="empty-state">No deadlines yet — add the work and its due day.</p>
+            </section>
+
+            <section id="tab-stats" class="tab-panel">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-value" id="stat-focus-today">0m</div>
+                  <div class="stat-label">Focused today</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" id="stat-done-today">0</div>
+                  <div class="stat-label">Done today</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" id="stat-rate">0%</div>
+                  <div class="stat-label">Completion</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" id="stat-sessions">0</div>
+                  <div class="stat-label">Sessions</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" id="stat-focus-score">—</div>
+                  <div class="stat-label">Focus score</div>
+                </div>
+              </div>
+              <h3 class="section-title">Last 7 days</h3>
+              <div id="weekly-chart" class="weekly-chart"></div>
+            </section>
+
+            <section id="tab-activity" class="tab-panel">
+              <div class="activity-grid">
+                <aside class="activity-side">
+                  <div class="apps-used-card">
+                    <div class="apps-used-row">
+                      <span class="apps-used-label">Apps used today</span>
+                      <span id="apps-used-count" class="apps-used-value">0</span>
+                    </div>
+                    <ul id="apps-list" class="apps-list"></ul>
+                  </div>
+                </aside>
+                <div class="activity-main">
+                  <ul id="activity-list" class="activity-list"></ul>
+                  <p id="activity-empty" class="empty-state">No activity yet.</p>
+                </div>
+              </div>
+            </section>
+
+            <section id="tab-settings" class="tab-panel">
+              <div class="settings-grid">
+                <div class="settings-col">
+                  <h3 class="section-title">Alarm sound</h3>
+                  <div class="sound-grid">
+                    <button class="sound-option" data-sound="beep">Beep</button>
+                    <button class="sound-option" data-sound="chime">Chime</button>
+                    <button class="sound-option" data-sound="bell">Bell</button>
+                    <button class="sound-option" data-sound="digital">Digital</button>
+                  </div>
+                  <div class="volume-row">
+                    <label class="field-label" for="volume-slider">Volume</label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="80" />
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <footer class="statusbar">
+          <span class="status-left">Momentum 1.0 · PC Edition</span>
+          <span class="status-right"><span id="status-date">—</span></span>
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      const demoToggle = document.getElementById('demoToggle');
+      const backBtn = document.getElementById('backBtn');
+      const body = document.body;
+
+      // State management
+      const state = {
+        tasks: [
+          { id: 't1', text: 'Design landing page', done: false },
+          { id: 't2', text: 'Finish booking notes', done: true },
+          { id: 't3', text: 'Plan tomorrow tasks', done: false }
+        ],
+        filter: 'all',
+        promise: 'I will finish my top priority before noon.',
+        deadlines: [
+          { id: 'd1', text: 'Product review', date: '2026-08-31' },
+          { id: 'd2', text: 'Client sync', date: '2026-08-30' }
+        ],
+        timer: { duration: 25, remaining: 25 * 60, running: false, taskId: null }
+      };
+
+      // Demo toggle and back button
+      demoToggle.addEventListener('click', () => {
+        body.classList.toggle('demo-mode');
+        demoToggle.textContent = body.classList.contains('demo-mode') ? 'Back to Landing' : 'View Demo';
+      });
+
+      document.getElementById('viewDemoBtn')?.addEventListener('click', () => {
+        body.classList.add('demo-mode');
+        demoToggle.textContent = 'Back to Landing';
+      });
+
+      backBtn?.addEventListener('click', () => {
+        body.classList.remove('demo-mode');
+        demoToggle.textContent = 'View Demo';
+      });
+
+      // Keyboard shortcut for back
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && body.classList.contains('demo-mode')) {
+          body.classList.remove('demo-mode');
+          demoToggle.textContent = 'View Demo';
+        }
+      });
+
+      // Tab navigation
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tabName = btn.dataset.tab;
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          tabPanels.forEach(panel => panel.classList.remove('active'));
+          const activePanel = document.getElementById(`tab-${tabName}`);
+          if (activePanel) activePanel.classList.add('active');
+
+          // Update page heading
+          const titles = {
+            tasks: ['Tasks', 'Add tasks, then run focus sessions on them.'],
+            focus: ['Focus', 'Start a session and stay on one thing.'],
+            promise: ['Promise', 'Your daily commitment.'],
+            deadline: ['Deadline', "The work that's due."],
+            stats: ['Stats', 'Your productivity at a glance.'],
+            activity: ['Activity', 'A live feed of your momentum.'],
+            settings: ['Settings', 'Tune sounds and preferences.']
+          };
+          const [title, desc] = titles[tabName] || titles.tasks;
+          document.getElementById('page-title').textContent = title;
+          document.getElementById('page-desc').textContent = desc;
+        });
+      });
+
+      // Task management
+      const taskForm = document.getElementById('task-form');
+      const taskInput = document.getElementById('task-input');
+      const taskList = document.getElementById('task-list');
+      const itemsLeft = document.getElementById('items-left');
+
+      function renderTasks() {
+        const visible = state.tasks.filter(t => {
+          if (state.filter === 'active') return !t.done;
+          if (state.filter === 'completed') return t.done;
+          return true;
+        });
+
+        taskList.innerHTML = visible.map(task => `
+          <li class="task-item ${task.done ? 'completed' : ''}" data-id="${task.id}">
+            <div style="flex:1"><strong>${task.text}</strong></div>
+            <button class="btn-secondary" data-action="toggle" data-id="${task.id}">${task.done ? '✓' : '○'}</button>
+          </li>
+        `).join('');
+
+        const active = state.tasks.filter(t => !t.done).length;
+        itemsLeft.textContent = `${active} task${active === 1 ? '' : 's'} left`;
+
+        const options = state.tasks
+          .filter(t => !t.done)
+          .map(t => `<option value="${t.id}">${t.text}</option>`)
+          .join('');
+        document.getElementById('focus-task').innerHTML = options || '<option value="">No active tasks</option>';
+      }
+
+      taskForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = taskInput.value.trim();
+        if (text) {
+          state.tasks.unshift({ id: `t_${Date.now()}`, text, done: false });
+          taskInput.value = '';
+          renderTasks();
+          renderStats();
+        }
+      });
+
+      taskList.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action="toggle"]');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const task = state.tasks.find(t => t.id === id);
+        if (task) {
+          task.done = !task.done;
+          renderTasks();
+          renderStats();
+        }
+      });
+
+      // Filter
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.filter = btn.dataset.filter;
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderTasks();
+        });
+      });
+
+      document.getElementById('clear-completed')?.addEventListener('click', () => {
+        state.tasks = state.tasks.filter(t => !t.done);
+        renderTasks();
+        renderStats();
+      });
+
+      // Focus timer
+      const timerDisplay = document.getElementById('timer-display');
+      const timerTaskLabel = document.getElementById('timer-task-label');
+      const timerStart = document.getElementById('timer-start');
+      const timerAdd = document.getElementById('timer-add');
+      const timerReset = document.getElementById('timer-reset');
+
+      function formatTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      }
+
+      function renderTimer() {
+        timerDisplay.textContent = formatTime(state.timer.remaining);
+        const task = state.tasks.find(t => t.id === state.timer.taskId);
+        timerTaskLabel.textContent = task ? task.text : 'Select a task to begin';
+        if (timerStart) timerStart.textContent = state.timer.running ? 'Pause' : 'Start';
+      }
+
+      timerStart?.addEventListener('click', () => {
+        if (!state.timer.taskId) {
+          const first = state.tasks.find(t => !t.done);
+          if (!first) return;
+          state.timer.taskId = first.id;
+        }
+        state.timer.running = !state.timer.running;
+        renderTimer();
+      });
+
+      timerAdd?.addEventListener('click', () => {
+        state.timer.remaining += 5 * 60;
+        renderTimer();
+      });
+
+      timerReset?.addEventListener('click', () => {
+        state.timer.running = false;
+        state.timer.remaining = state.timer.duration * 60;
+        renderTimer();
+      });
+
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.timer.duration = Number(btn.dataset.mins);
+          state.timer.running = false;
+          state.timer.remaining = state.timer.duration * 60;
+          renderTimer();
+        });
+      });
+
+      document.getElementById('focus-task')?.addEventListener('change', (e) => {
+        state.timer.taskId = e.target.value || null;
+        state.timer.running = false;
+        state.timer.remaining = state.timer.duration * 60;
+        renderTimer();
+      });
+
+      document.querySelectorAll('.sound-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.sound-option').forEach(b => {
+            b.classList.toggle('active', b === btn);
+            b.setAttribute('aria-pressed', String(b === btn));
+          });
+        });
+      });
+
+      // Timer tick
+      setInterval(() => {
+        if (state.timer.running && state.timer.remaining > 0) {
+          state.timer.remaining--;
+          renderTimer();
+        }
+        if (state.timer.running && state.timer.remaining === 0) {
+          state.timer.running = false;
+          renderTimer();
+        }
+      }, 1000);
+
+      // Promise
+      const promiseInput = document.getElementById('promise-input');
+      const promiseSave = document.getElementById('promise-save');
+      const promiseClear = document.getElementById('promise-clear');
+      const promiseStatus = document.getElementById('promise-status');
+
+      function renderPromise() {
+        if (promiseInput) promiseInput.value = state.promise;
+        if (promiseStatus) promiseStatus.textContent = state.promise || 'No promise yet';
+      }
+
+      promiseSave?.addEventListener('click', () => {
+        if (promiseInput) {
+          state.promise = promiseInput.value.trim();
+          renderPromise();
+        }
+      });
+
+      promiseClear?.addEventListener('click', () => {
+        state.promise = '';
+        renderPromise();
+      });
+
+      // Deadlines
+      const deadlineForm = document.getElementById('deadline-form');
+      const deadlineList = document.getElementById('deadline-list');
+      const deadlineEmpty = document.getElementById('deadline-empty');
+
+      function renderDeadlines() {
+        if (!state.deadlines.length) {
+          deadlineList.innerHTML = '';
+          deadlineEmpty.style.display = 'block';
+          return;
+        }
+        deadlineEmpty.style.display = 'none';
+        deadlineList.innerHTML = state.deadlines.map(d => `
+          <li class="deadline-item">
+            <div><strong>${d.text}</strong><br><small>${d.date}</small></div>
+            <button class="btn-secondary" data-id="${d.id}" data-action="delete-deadline">Remove</button>
+          </li>
+        `).join('');
+      }
+
+      deadlineForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = document.getElementById('deadline-work')?.value.trim();
+        const date = document.getElementById('deadline-date')?.value;
+        if (text && date) {
+          state.deadlines.push({ id: `d_${Date.now()}`, text, date });
+          deadlineForm.reset();
+          renderDeadlines();
+        }
+      });
+
+      deadlineList?.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action="delete-deadline"]');
+        if (!btn) return;
+        state.deadlines = state.deadlines.filter(d => d.id !== btn.dataset.id);
+        renderDeadlines();
+      });
+
+      // Stats
+      function renderStats() {
+        const done = state.tasks.filter(t => t.done).length;
+        const total = state.tasks.length || 1;
+        const rate = Math.round((done / total) * 100);
+
+        const el = (id) => document.getElementById(id);
+        if (el('stat-done-today')) el('stat-done-today').textContent = String(done);
+        if (el('stat-rate')) el('stat-rate').textContent = `${rate}%`;
+        if (el('stat-sessions')) el('stat-sessions').textContent = String(state.tasks.length);
+        if (el('stat-focus-today')) el('stat-focus-today').textContent = '42m';
+        if (el('stat-focus-score')) el('stat-focus-score').textContent = rate > 60 ? 'A' : 'B';
+
+        const bars = [42, 58, 88, 64, 72, 90, 80];
+        const chart = document.getElementById('weekly-chart');
+        if (chart) {
+          chart.innerHTML = bars.map(v => `<div class="chart-bar" style="height:${v}%"></div>`).join('');
+        }
+      }
+
+      // Activity
+      function renderActivity() {
+        const list = document.getElementById('activity-list');
+        const empty = document.getElementById('activity-empty');
+        if (!list) return;
+        list.innerHTML = ['Logged in and started the day.', 'Completed a focus sprint.', 'Updated the weekly plan.']
+          .map(a => `<li>${a}</li>`).join('');
+        if (empty) empty.style.display = 'none';
+      }
+
+      // Clock update
+      function updateClock() {
+        const now = new Date();
+        const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const date = now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+        const clock = document.getElementById('header-clock');
+        const statusDate = document.getElementById('status-date');
+        if (clock) clock.textContent = time;
+        if (statusDate) statusDate.textContent = date;
+      }
+
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Download button
+      document.getElementById('downloadBtnBottom')?.addEventListener('click', () => {
+        const a = document.createElement('a');
+        a.href = 'file:///C:/Users/USER/Desktop/New%20folder/MomentumApp/Momentum.exe';
+        a.target = '_self';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+
+      // Initialize
+      renderTasks();
+      renderPromise();
+      renderDeadlines();
+      renderStats();
+      renderActivity();
+      renderTimer();
+    </script>
+  </body>
+</html>
